@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AppearanceProvider } from "@/context/AppearanceContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { MlBackendProvider } from "@/context/MlBackendContext";
 
 function NotFoundComponent() {
   return (
@@ -120,8 +123,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AuthProvider>
+        <AppearanceProvider>
+          <MlBackendProvider>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </MlBackendProvider>
+        </AppearanceProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

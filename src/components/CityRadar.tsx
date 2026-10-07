@@ -180,7 +180,7 @@ export function CityRadar() {
                 <stop offset="100%" stopColor="var(--steel)" stopOpacity="0" />
               </radialGradient>
               <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1" fill="rgba(125, 211, 252, 0.16)" />
+                <circle cx="2" cy="2" r="1" fill="rgba(var(--primary-rgb), 0.16)" />
               </pattern>
             </defs>
             <path

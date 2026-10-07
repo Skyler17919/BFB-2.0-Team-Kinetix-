@@ -15,6 +15,21 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+.env
+.env.local
+.env.*.local
+.env.*
+
+# ML backend
+ml-backend/.venv/
+ml-backend/venv/
+ml-backend/artifacts/*
+!ml-backend/artifacts/.gitkeep
+ml-backend/tmp_smoke_train.csv
+ml-backend/smoke_train.py
+ml-backend/smoke_predict.py
+__pycache__/
+*.pyc
 
 # Wrangler / Cloudflare
 .wrangler/

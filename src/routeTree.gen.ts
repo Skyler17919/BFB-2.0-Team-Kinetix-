@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/auth' | '/login' | '/reset-password' | '/signup' | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    '/' | '/auth' | '/login' | '/reset-password' | '/signup' | '/auth/callback'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
+    | '/auth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRouteWithChildren,
+  LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

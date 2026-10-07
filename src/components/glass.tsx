@@ -12,8 +12,8 @@ export const CHART = {
     fontSize: 12,
     boxShadow: "0 16px 40px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.12)",
   },
-  cyan: "#7dd3fc",
-  steel: "#93c5fd",
+  cyan: "var(--chart-accent, var(--primary))",
+  steel: "var(--steel)",
 };
 
 export function PageHeader({
