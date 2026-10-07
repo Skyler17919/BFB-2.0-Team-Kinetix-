@@ -4,7 +4,16 @@ import { RiskPredictor } from "@/components/RiskPredictor";
 import { CityRadar } from "@/components/CityRadar";
 import { TransitionPlanner, type SavedPlan } from "@/components/TransitionPlanner";
 import { IntegrityRegistry } from "@/components/IntegrityRegistry";
-import { Brain, MapPin, Route as RouteIcon, ShieldCheck, Sparkles } from "lucide-react";
+import { HRDashboard } from "@/components/HRDashboard";
+import {
+  Brain,
+  BriefcaseBusiness,
+  MapPin,
+  Route as RouteIcon,
+  ShieldCheck,
+  Sparkles,
+  UsersRound,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,6 +47,7 @@ const TABS = [
 type TabId = (typeof TABS)[number]["id"];
 
 function Index() {
+  const [workspace, setWorkspace] = useState<"career" | "hr">("career");
   const [tab, setTab] = useState<TabId>("risk");
   const [savedPlans, setSavedPlans] = useState<SavedPlan[]>([]);
 
@@ -59,41 +69,81 @@ function Index() {
               <p className="text-[11px] font-light text-muted-foreground">Workforce Intelligence</p>
             </div>
           </div>
-          <nav className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-1.5">
-            {TABS.map(({ id, label, icon: Icon }) => {
-              const active = tab === id;
-              return (
-                <button
-                  key={id}
-                  onClick={() => setTab(id)}
-                  className={`nav-pill flex items-center gap-3 whitespace-nowrap rounded-full px-4 py-2.5 text-sm ${
-                    active ? "nav-pill-active" : ""
-                  }`}
-                >
-                  <Icon className={`size-4 ${active ? "text-primary" : ""}`} strokeWidth={1.5} />
-                  {label}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="glass hidden p-4 lg:block">
-            <p className="eyebrow">Engine</p>
-            <p className="mt-1 text-xs font-light text-muted-foreground">
-              Mock models active — real forecasts plug in without UI changes.
-            </p>
-            <p className="mt-3 text-[11px] font-light text-muted-foreground/70">
-              Build for Bharat 2.0
-            </p>
+          <div className="grid grid-cols-2 gap-2" aria-label="Dashboard workspace">
+            <button
+              onClick={() => setWorkspace("career")}
+              aria-pressed={workspace === "career"}
+              className={`nav-pill flex items-center justify-center gap-2 rounded-full px-3 py-2.5 text-sm ${workspace === "career" ? "nav-pill-active" : ""}`}
+            >
+              <BriefcaseBusiness className="size-4" strokeWidth={1.5} /> Career
+            </button>
+            <button
+              onClick={() => setWorkspace("hr")}
+              aria-pressed={workspace === "hr"}
+              className={`nav-pill flex items-center justify-center gap-2 rounded-full px-3 py-2.5 text-sm ${workspace === "hr" ? "nav-pill-active" : ""}`}
+            >
+              <UsersRound className="size-4" strokeWidth={1.5} /> HR Dashboard
+            </button>
           </div>
+          {workspace === "career" ? (
+            <>
+              <nav
+                className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-1.5"
+                aria-label="Career intelligence views"
+              >
+                {TABS.map(({ id, label, icon: Icon }) => {
+                  const active = tab === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => setTab(id)}
+                      aria-current={active ? "page" : undefined}
+                      className={`nav-pill flex items-center gap-3 whitespace-nowrap rounded-full px-4 py-2.5 text-sm ${
+                        active ? "nav-pill-active" : ""
+                      }`}
+                    >
+                      <Icon
+                        className={`size-4 ${active ? "text-primary" : ""}`}
+                        strokeWidth={1.5}
+                      />
+                      {label}
+                    </button>
+                  );
+                })}
+              </nav>
+              <div className="glass hidden p-4 lg:block">
+                <p className="eyebrow">Engine</p>
+                <p className="mt-1 text-xs font-light text-muted-foreground">
+                  Mock models active — real forecasts plug in without UI changes.
+                </p>
+                <p className="mt-3 text-[11px] font-light text-muted-foreground/70">
+                  Build for Bharat 2.0
+                </p>
+              </div>
+            </>
+          ) : (
+            <div className="glass hidden p-4 lg:block">
+              <p className="eyebrow">HR workspace</p>
+              <p className="mt-1 text-xs font-light text-muted-foreground">
+                Candidate review and workforce planning from uploaded dataset snapshots.
+              </p>
+            </div>
+          )}
         </aside>
 
-        <main key={tab} className="min-w-0 flex-1 pb-12 fade-up">
-          {tab === "risk" && <RiskPredictor />}
-          {tab === "city" && <CityRadar />}
-          {tab === "planner" && (
-            <TransitionPlanner onSave={(p) => setSavedPlans((prev) => [p, ...prev])} />
+        <main key={workspace === "hr" ? "hr" : tab} className="min-w-0 flex-1 pb-12 fade-up">
+          {workspace === "hr" ? (
+            <HRDashboard />
+          ) : (
+            <>
+              {tab === "risk" && <RiskPredictor />}
+              {tab === "city" && <CityRadar />}
+              {tab === "planner" && (
+                <TransitionPlanner onSave={(p) => setSavedPlans((prev) => [p, ...prev])} />
+              )}
+              {tab === "registry" && <IntegrityRegistry savedPlans={savedPlans} />}
+            </>
           )}
-          {tab === "registry" && <IntegrityRegistry savedPlans={savedPlans} />}
         </main>
       </div>
     </div>
